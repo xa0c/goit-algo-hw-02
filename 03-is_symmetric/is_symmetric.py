@@ -28,18 +28,22 @@ def is_symmetric(text: str) -> bool:
     """
     stack = Stack()
     for ch in text:
-        match ch:
-            case '(' | '[' | '{':
-                stack.push(ch)
-            case ')':
-                if stack.pop() != '(':
-                    return False
-            case ']':
-                if stack.pop() != '[':
-                    return False
-            case '}':
-                if stack.pop() != '{':
-                    return False
+        try:
+            match ch:
+                case '(' | '[' | '{':
+                    stack.push(ch)
+                case ')':
+                    if stack.pop() != '(':
+                        return False
+                case ']':
+                    if stack.pop() != '[':
+                        return False
+                case '}':
+                    if stack.pop() != '{':
+                        return False
+        except IndexError:
+            # Stack is empty when closing brace appears before opening brace
+            return False
     if not stack.is_empty():
         return False
     return True
@@ -50,6 +54,7 @@ if __name__ == "__main__":
         "( ){[ 1 ]( 1 + 3 )( ){ }}",
         "( 23 ( 2 - 3);",
         "( 11 }",
+        ")(",
     ]
     for text in texts:
         print(f"{text.ljust(40)} {": SYMMETRIC" if is_symmetric(text) else ": NOT SYMMETRIC"}")
